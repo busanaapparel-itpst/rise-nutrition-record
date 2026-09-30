@@ -9,3 +9,8 @@ Input tersimpan di localStorage browser; belum ada database, login, atau penyimp
 Deploy ke GitHub Pages:
 Unggah ketujuh file ke halaman utama (root) repository, lalu buka Settings > Pages, pilih Deploy from a branch, branch main, folder / (root).
 Semua tautan memakai path relatif sehingga berfungsi di https://username.github.io/nama-repo/ maupun di server lokal.
+
+PWA (bisa dipasang di HP):
+File tambahan: manifest.json, sw.js, pwa.js, pwa.css, icon-192.png, icon-512.png, icon-maskable-512.png (total 14 file di root repository).
+Jika mengubah file apa pun, naikkan angka versi CACHE di sw.js (rise-v1 -> rise-v2) agar HP pengguna mengambil versi terbaru.
+PWA hanya aktif lewat HTTPS (GitHub Pages sudah HTTPS).
