@@ -1,4 +1,4 @@
-var CACHE = "rise-v1";
+var CACHE = "rise-v2";
 var BS_CSS = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css";
 var SHELL = ["./", "index.html", "bootstrap.html", "main.js", "bootstrap.js", "main.css", "bootstrap.css",
   "pwa.js", "pwa.css", "manifest.json", "icon-192.png", "icon-512.png"];

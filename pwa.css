@@ -4,17 +4,15 @@ button{touch-action:manipulation}
 
 /* Menu bawah ala aplikasi */
 @media (max-width:950px){
-  .mobile-nav{position:fixed;left:0;right:0;bottom:0;z-index:50;display:grid!important;grid-template-columns:repeat(5,1fr);gap:2px!important;overflow:visible!important;
+  .mobile-nav{position:fixed;left:0;right:0;bottom:0;z-index:50;display:grid!important;grid-auto-flow:column;grid-auto-columns:1fr;gap:2px!important;overflow:visible!important;
     padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px))!important;box-shadow:0 -4px 14px rgba(0,0,0,.14)}
   .mobile-nav>button{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:2px;min-height:56px;
     padding:6px 2px!important;font-size:11px!important;line-height:1.15;text-align:center!important;white-space:normal!important;border-radius:10px!important}
   .mobile-nav>button:not(.active){background:transparent}
   .mobile-nav>button::before{font-size:20px;line-height:1.1}
-  .mobile-nav>button:nth-child(1)::before{content:"\1F4CA"}
-  .mobile-nav>button:nth-child(2)::before{content:"\1F4B0"}
-  .mobile-nav>button:nth-child(3)::before{content:"\1F9FE"}
-  .mobile-nav>button:nth-child(4)::before{content:"\1F957"}
-  .mobile-nav>button:nth-child(5)::before{content:"\23F1\FE0F"}
+  .mobile-nav>button:nth-child(1)::before{content:"\1F4B0"}
+  .mobile-nav>button:nth-child(2)::before{content:"\1F957"}
+  .mobile-nav>button:nth-child(3)::before{content:"\23F1\FE0F"}
   .main{padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))!important}
 }
 
