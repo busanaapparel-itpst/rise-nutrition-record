@@ -46,3 +46,9 @@ button{touch-action:manipulation}
   table.wide th:first-child,table.wide td:first-child{position:sticky;left:0;z-index:1;background:#fff;box-shadow:2px 0 0 #e6eeef}
   table.wide th:first-child{background:#f3f8f8}
 }
+
+.pdf-actions{margin:-14px 0 22px}
+.pdf-btn:not(.btn){border:0;border-radius:10px;padding:11px 18px;font-weight:700;color:#fff;background:#147c70;cursor:pointer}
+.pdf-btn:not(.btn):hover{background:#0d655a}
+.pdf-btn::before{content:"\1F4C4  "}
+@media (max-width:700px){.pdf-actions{margin:-8px 0 18px}.pdf-actions .pdf-btn{width:100%}}
