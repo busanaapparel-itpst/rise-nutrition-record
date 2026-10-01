@@ -38,7 +38,7 @@ button{touch-action:manipulation}
   table.stack td:first-child{justify-content:flex-start;text-align:left;font-weight:700;font-size:15px;border-bottom:1px solid #edf2f3!important}
   table.stack td:first-child::before,table.stack td[data-label=""]::before{content:none}
   table.stack td[data-label=""]{justify-content:flex-end}
-  table.stack .table-input{flex:1;min-width:0;width:100%}
+  table.stack .table-input,table.stack select{flex:1;min-width:0;width:100%}
 
   /* Tabel lebar (audit waktu): geser samping, kolom pertama menempel */
   table.wide{min-width:820px!important}

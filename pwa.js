@@ -30,7 +30,11 @@
     if (el.inputMode === "decimal") { var n = Number(v); return isNaN(n) ? v : n.toLocaleString("id-ID", { maximumFractionDigits: 2 }); }
     return v;
   }
-  function cellText(c) { var i = c.querySelector("input"); return clean(i ? fieldText(i) : c.textContent); }
+  function cellText(c) {
+    var i = c.querySelector("input, select");
+    if (i && i.tagName === "SELECT") return i.value ? clean(i.options[i.selectedIndex].text) : "-";
+    return clean(i ? fieldText(i) : c.textContent);
+  }
 
   function generate() {
     if (!(window.jspdf && window.jspdf.jsPDF)) { alert("Library PDF belum termuat. Periksa koneksi internet lalu coba lagi."); return; }
