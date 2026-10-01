@@ -28,7 +28,7 @@ button{touch-action:manipulation}
   .delete-expense{min-height:44px;padding:0 10px}
 
   /* Tabel biasa -> kartu */
-  .table-wrap,.table-responsive{overflow:visible}
+  .stack-wrap{overflow:visible!important}
   table.stack{min-width:0!important;width:100%;display:block;border:0}
   table.stack thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
   table.stack tbody{display:block}
@@ -47,13 +47,23 @@ button{touch-action:manipulation}
   table.wide th:first-child{background:#f3f8f8}
 }
 
-.pdf-actions{margin:26px 0 8px}
+.pdf-actions{margin:26px 0 8px;display:flex;gap:10px;flex-wrap:wrap}
 .pdf-btn:not(.btn){border:0;border-radius:10px;padding:11px 18px;font-weight:700;color:#fff;background:#147c70;cursor:pointer}
 .pdf-btn:not(.btn):hover{background:#0d655a}
 .pdf-btn::before{content:"\1F4C4  "}
-@media (max-width:700px){.pdf-actions{margin:20px 0 6px}.pdf-actions .pdf-btn{width:100%}}
+@media (max-width:700px){.pdf-actions{margin:20px 0 6px}.pdf-actions>button{flex:1 1 140px}}
 
 .add-item{width:100%;min-height:44px;margin:12px 0 0;background:#f3f8f9;border:1px dashed #147c70;color:#147c70;border-radius:10px;font:inherit;font-weight:700;cursor:pointer}
 .add-item:hover{background:#e6f2f2}
 .rm-item{min-width:40px;min-height:40px;border:1px solid #e4cfcc;background:#fff;color:#a33a3a;border-radius:8px;font-size:1.25rem;line-height:1;cursor:pointer}
 .shell:has(.nav-pills) .add-item{color:#0d6efd;border-color:#0d6efd;background:#f2f7ff}
+
+.clear-btn:not(.btn){border:1px solid #d9b1ab;border-radius:10px;padding:11px 18px;font-weight:700;color:#a33a3a;background:#fff;cursor:pointer}
+.clear-btn:not(.btn):hover{background:#fdf1ef}
+.clear-btn::before{content:"\1F5D1\FE0F  "}
+
+/* Isi kartu tidak boleh melebihi kartu; tabel lebar digeser di dalam kartu */
+.main,.panel,.card,.shell>div{min-width:0}
+.wide-wrap{overflow-x:auto!important;max-width:100%;-webkit-overflow-scrolling:touch}
+table.wide th:first-child,table.wide td:first-child{position:sticky;left:0;z-index:2;background:#fff;box-shadow:2px 0 0 #dfe8ea;min-width:112px;max-width:150px;white-space:normal}
+table.wide th:first-child{background:#f3f8f8}

@@ -8,6 +8,7 @@
     app.querySelectorAll("table").forEach(function (t) {
       var heads = [].map.call(t.querySelectorAll("thead th"), function (th) { return th.textContent.trim(); });
       t.classList.add(heads.length > 6 ? "wide" : "stack");
+      if (t.parentElement) t.parentElement.classList.add(heads.length > 6 ? "wide-wrap" : "stack-wrap");
       t.querySelectorAll("tbody tr").forEach(function (tr) {
         [].forEach.call(tr.children, function (td, i) { td.setAttribute("data-label", heads[i] || ""); });
       });
@@ -15,7 +16,8 @@
     if (app.querySelector(".top") && !app.querySelector(".pdf-actions")) {
       var d = document.createElement("div");
       d.className = "pdf-actions";
-      d.innerHTML = '<button type="button" class="pdf-btn' + (isBs ? " btn btn-primary" : "") + '">Generate PDF</button>';
+      d.innerHTML = '<button type="button" class="pdf-btn' + (isBs ? " btn btn-primary" : "") + '">Generate PDF</button>' +
+        '<button type="button" class="clear-btn' + (isBs ? " btn btn-outline-danger" : "") + '">Clear Data</button>';
       var foot = app.querySelector(":scope > .hint");
       if (foot) foot.insertAdjacentElement("beforebegin", d); else app.appendChild(d);
     }
@@ -106,7 +108,29 @@
     doc.save("rise-" + slug + "-" + new Date().toISOString().slice(0, 10) + ".pdf");
   }
 
-  document.addEventListener("click", function (e) { if (e.target.closest(".pdf-btn")) generate(); });
+  // ---- Clear Data: kembalikan menu yang sedang dibuka ke kondisi awal ----
+  var CLEAR = {
+    budgeting: { label: "Budgeting bulanan (semua bulan, termasuk item yang Anda tambah atau ubah)",
+      test: function (k) { return /^budget:/.test(k) || /^budget-name:/.test(k) || /^b-\d+-\d+$/.test(k) || k === "budgetIds" || k === "budget-period"; } },
+    nutrition: { label: "Nutrisi harian (termasuk item yang Anda tambah atau ubah)",
+      test: function (k) { return /^n-\d+-/.test(k) || k === "nutIds" || k === "nutrition-date"; } },
+    time: { label: "Audit waktu",
+      test: function (k) { return /^t-\d+-\d+$/.test(k) || /^time-(name|age|job)$/.test(k); } }
+  };
+  function clearData() {
+    var h = location.hash.slice(1), page = CLEAR[h] ? h : "budgeting", c = CLEAR[page];
+    if (typeof state === "undefined" || typeof render !== "function") return;
+    if (!confirm("Hapus semua isian di menu " + c.label + " dan kembalikan ke kondisi awal?\n\nTindakan ini tidak bisa dibatalkan.")) return;
+    Object.keys(state).forEach(function (k) { if (c.test(k)) delete state[k]; });
+    save();
+    render();
+    window.scrollTo(0, 0);
+  }
+
+  document.addEventListener("click", function (e) {
+    if (e.target.closest(".pdf-btn")) generate();
+    else if (e.target.closest(".clear-btn")) clearData();
+  });
 
   if (app) {
     prepare();
