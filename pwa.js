@@ -12,12 +12,12 @@
         [].forEach.call(tr.children, function (td, i) { td.setAttribute("data-label", heads[i] || ""); });
       });
     });
-    var top = app.querySelector(".top");
-    if (top && !app.querySelector(".pdf-actions")) {
+    if (app.querySelector(".top") && !app.querySelector(".pdf-actions")) {
       var d = document.createElement("div");
       d.className = "pdf-actions";
       d.innerHTML = '<button type="button" class="pdf-btn' + (isBs ? " btn btn-primary" : "") + '">Generate PDF</button>';
-      top.insertAdjacentElement("afterend", d);
+      var foot = app.querySelector(":scope > .hint");
+      if (foot) foot.insertAdjacentElement("beforebegin", d); else app.appendChild(d);
     }
   }
 
@@ -62,12 +62,12 @@
         doc.setFont("helvetica", "bold"); doc.setFontSize(12.5); doc.setTextColor(20, 59, 72);
         doc.text(clean(el.textContent), L, y); doc.setTextColor(0); y += 3;
       } else if (el.tagName === "TABLE") {
-        var heads = [].map.call(el.querySelectorAll("thead th"), function (th) {
+        var heads = [].filter.call(el.querySelectorAll("thead th"), function (th) { return !th.classList.contains("no-pdf"); }).map(function (th) {
           return { content: clean(th.textContent), styles: { halign: th.classList.contains("num") ? "right" : "left" } };
         });
         var body = [].map.call(el.querySelectorAll("tbody tr"), function (tr) {
           var total = !!tr.querySelector("th");
-          return [].map.call(tr.children, function (c) {
+          return [].filter.call(tr.children, function (c) { return !c.classList.contains("no-pdf"); }).map(function (c) {
             var i = c.querySelector("input"), num = c.classList.contains("num") || (i && i.inputMode === "decimal");
             return { content: cellText(c), styles: { halign: num ? "right" : "left", fontStyle: total ? "bold" : "normal" } };
           });

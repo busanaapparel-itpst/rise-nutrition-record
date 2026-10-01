@@ -47,8 +47,13 @@ button{touch-action:manipulation}
   table.wide th:first-child{background:#f3f8f8}
 }
 
-.pdf-actions{margin:-14px 0 22px}
+.pdf-actions{margin:26px 0 8px}
 .pdf-btn:not(.btn){border:0;border-radius:10px;padding:11px 18px;font-weight:700;color:#fff;background:#147c70;cursor:pointer}
 .pdf-btn:not(.btn):hover{background:#0d655a}
 .pdf-btn::before{content:"\1F4C4  "}
-@media (max-width:700px){.pdf-actions{margin:-8px 0 18px}.pdf-actions .pdf-btn{width:100%}}
+@media (max-width:700px){.pdf-actions{margin:20px 0 6px}.pdf-actions .pdf-btn{width:100%}}
+
+.add-item{width:100%;min-height:44px;margin:12px 0 0;background:#f3f8f9;border:1px dashed #147c70;color:#147c70;border-radius:10px;font:inherit;font-weight:700;cursor:pointer}
+.add-item:hover{background:#e6f2f2}
+.rm-item{min-width:40px;min-height:40px;border:1px solid #e4cfcc;background:#fff;color:#a33a3a;border-radius:8px;font-size:1.25rem;line-height:1;cursor:pointer}
+.shell:has(.nav-pills) .add-item{color:#0d6efd;border-color:#0d6efd;background:#f2f7ff}
