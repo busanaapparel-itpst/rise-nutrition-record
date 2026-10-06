@@ -3,6 +3,8 @@
   var isBs = document.getElementById("nav").classList.contains("nav-pills");
   var clean = function (s) { return String(s).replace(/\u2212/g, "-").replace(/\u00a0/g, " ").replace(/\s+/g, " ").trim(); };
 
+  var PROFILE = [["time-name", "Nama"], ["time-age", "Usia"], ["time-job", "Profesi"]];
+
   // Tabel: beri label pada sel (tampil sebagai kartu di layar kecil), dan pasang tombol PDF
   function prepare() {
     app.querySelectorAll("table").forEach(function (t) {
@@ -12,6 +14,11 @@
       t.querySelectorAll("tbody tr").forEach(function (tr) {
         [].forEach.call(tr.children, function (td, i) { td.setAttribute("data-label", heads[i] || ""); });
       });
+    });
+    PROFILE.forEach(function (p) {
+      var el = app.querySelector('[data-key="' + p[0] + '"]'), lab = el && el.closest(".field") && el.closest(".field").querySelector("label");
+      if (lab && !lab.querySelector(".req")) lab.insertAdjacentHTML("beforeend", ' <span class="req" aria-hidden="true">*</span>');
+      if (el) el.setAttribute("aria-required", "true");
     });
     if (app.querySelector(".top") && !app.querySelector(".pdf-actions")) {
       var d = document.createElement("div");
@@ -51,7 +58,21 @@
     return clean(i ? fieldText(i) : c.textContent);
   }
 
+  function checkProfile() {
+    var bad = [];
+    PROFILE.forEach(function (p) {
+      var el = app.querySelector('[data-key="' + p[0] + '"]'), v = el ? el.value.trim() : "";
+      if (!v || (p[0] === "time-age" && !(Number(v) > 0))) bad.push({ el: el, label: p[1] });
+    });
+    if (!bad.length) return true;
+    bad.forEach(function (b) { if (b.el) b.el.classList.add("field-invalid"); });
+    alert("Lengkapi dulu data berikut sebelum membuat PDF:\n- " + bad.map(function (b) { return b.label; }).join("\n- "));
+    if (bad[0].el) { bad[0].el.focus(); bad[0].el.scrollIntoView({ block: "center", behavior: "smooth" }); }
+    return false;
+  }
+
   function generate() {
+    if (!checkProfile()) return;
     if (!(window.jspdf && window.jspdf.jsPDF)) { alert("Library PDF belum termuat. Periksa koneksi internet lalu coba lagi."); return; }
     var title = clean(app.querySelector(".top h1").textContent);
     var subEl = app.querySelector(".top p");
@@ -60,17 +81,17 @@
     var W = doc.internal.pageSize.getWidth(), H = doc.internal.pageSize.getHeight(), L = 14, R = W - 14, y = 18;
     function room(h) { if (y + h > H - 14) { doc.addPage(); y = 18; } }
 
-    var lh = 16, lw = 0, tx = L;
+    var lh = 16, lw = 0, tx = L, tw = R - L;
     if (logo) {
       lw = lh * logo.w / logo.h;
       if (lw > 50) { lw = 50; lh = lw * logo.h / logo.w; }
-      doc.addImage(logo.data, "PNG", L, y + 3 - lh / 2, lw, lh);
-      tx = L + lw + 5;
+      doc.addImage(logo.data, "PNG", R - lw, y + 3 - lh / 2, lw, lh);
+      tw = R - L - lw - 5;
     }
     doc.setFont("helvetica", "bold"); doc.setFontSize(18); doc.setTextColor(20, 59, 72);
     doc.text(title, tx, y); y += 7;
     doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(110);
-    if (subEl) { doc.text(doc.splitTextToSize(clean(subEl.textContent), R - tx), tx, y); y += 5; }
+    if (subEl) { doc.text(doc.splitTextToSize(clean(subEl.textContent), tw), tx, y); y += 5; }
     doc.text("Dibuat pada " + new Date().toLocaleString("id-ID"), tx, y); y += 3;
     if (logo) y = Math.max(y, 18 + 3 + lh / 2 + 3);
     doc.setDrawColor(190); doc.line(L, y, R, y); y += 8;
