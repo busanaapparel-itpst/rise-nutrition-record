@@ -115,7 +115,7 @@
     nutrition: { label: "Nutrisi harian (termasuk item yang Anda tambah atau ubah)",
       test: function (k) { return /^n-\d+-/.test(k) || k === "nutIds" || k === "nutrition-date"; } },
     time: { label: "Audit waktu",
-      test: function (k) { return /^t-\d+-\d+$/.test(k) || /^time-(name|age|job)$/.test(k); } }
+      test: function (k) { return /^t-\d+-\d+$/.test(k); } }
   };
   function clearData() {
     var h = location.hash.slice(1), page = CLEAR[h] ? h : "budgeting", c = CLEAR[page];
