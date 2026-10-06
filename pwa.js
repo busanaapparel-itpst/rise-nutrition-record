@@ -23,6 +23,19 @@
     }
   }
 
+  // ---- Logo untuk header PDF: ganti file logo.png untuk memakai logo sendiri ----
+  var logo = null;
+  (function () {
+    var img = new Image();
+    img.onload = function () {
+      var k = Math.min(1, 600 / Math.max(img.naturalWidth, img.naturalHeight)), c = document.createElement("canvas");
+      c.width = Math.round(img.naturalWidth * k); c.height = Math.round(img.naturalHeight * k);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      try { logo = { data: c.toDataURL("image/png"), w: c.width, h: c.height }; } catch (err) {}
+    };
+    img.src = "logo.png";
+  })();
+
   // ---- PDF dari isi halaman yang sedang dibuka ----
   function fieldText(el) {
     var v = el.value.trim();
@@ -47,11 +60,19 @@
     var W = doc.internal.pageSize.getWidth(), H = doc.internal.pageSize.getHeight(), L = 14, R = W - 14, y = 18;
     function room(h) { if (y + h > H - 14) { doc.addPage(); y = 18; } }
 
+    var lh = 16, lw = 0, tx = L;
+    if (logo) {
+      lw = lh * logo.w / logo.h;
+      if (lw > 50) { lw = 50; lh = lw * logo.h / logo.w; }
+      doc.addImage(logo.data, "PNG", L, y + 3 - lh / 2, lw, lh);
+      tx = L + lw + 5;
+    }
     doc.setFont("helvetica", "bold"); doc.setFontSize(18); doc.setTextColor(20, 59, 72);
-    doc.text(title, L, y); y += 7;
+    doc.text(title, tx, y); y += 7;
     doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(110);
-    if (subEl) { doc.text(doc.splitTextToSize(clean(subEl.textContent), R - L), L, y); y += 5; }
-    doc.text("Dibuat pada " + new Date().toLocaleString("id-ID"), L, y); y += 3;
+    if (subEl) { doc.text(doc.splitTextToSize(clean(subEl.textContent), R - tx), tx, y); y += 5; }
+    doc.text("Dibuat pada " + new Date().toLocaleString("id-ID"), tx, y); y += 3;
+    if (logo) y = Math.max(y, 18 + 3 + lh / 2 + 3);
     doc.setDrawColor(190); doc.line(L, y, R, y); y += 8;
     doc.setTextColor(0);
 

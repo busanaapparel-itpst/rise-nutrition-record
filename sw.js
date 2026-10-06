@@ -1,4 +1,4 @@
-var CACHE = "rise-v7";
+var CACHE = "rise-v9";
 var BS_CSS = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css";
 var LIBS = ["https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js", "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"];
 var SHELL = ["./", "index.html", "bootstrap.html", "main.js", "bootstrap.js", "main.css", "bootstrap.css",
@@ -7,7 +7,7 @@ var SHELL = ["./", "index.html", "bootstrap.html", "main.js", "bootstrap.js", "m
 self.addEventListener("install", function (e) {
   e.waitUntil(caches.open(CACHE).then(function (c) {
     return c.addAll(SHELL).then(function () {
-      return Promise.all(LIBS.concat(BS_CSS).map(function (u) { return c.add(u).catch(function () {}); }));
+      return Promise.all(LIBS.concat(BS_CSS, "logo.png").map(function (u) { return c.add(u).catch(function () {}); }));
     });
   }));
   self.skipWaiting();
