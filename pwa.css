@@ -89,3 +89,15 @@ table.wide th:first-child{background:#f3f8f8}
 .shell:has(.nav-pills) .rx-opt input,.shell:has(.nav-pills) .rx-check input{accent-color:#0d6efd}
 .shell:has(.nav-pills) .rx-link{color:#0d6efd}
 @media (max-width:700px){.rx-fields{grid-template-columns:1fr}.rx-card,.rx-q{padding:14px}}
+
+/* Halaman link Google Sheet (Pre-test / Post-test) */
+.rx-sheet{text-align:center;padding:36px 20px}
+.rx-sheet-ico{font-size:44px;line-height:1;margin-bottom:10px}
+.rx-sheet h2{margin:0 0 8px;font-size:20px}
+.rx-sheet p{margin:0 0 18px;color:#52707a}
+.rx-muted{color:#8a9aa0!important}
+.rx-btn{display:inline-block;padding:13px 24px;border-radius:12px;background:#147c70;color:#fff!important;font-weight:700;text-decoration:none}
+.rx-btn:hover{background:#0d655a}
+.shell:has(.nav-pills) .rx-btn{background:#0d6efd}
+.shell:has(.nav-pills) .rx-btn:hover{background:#0b5ed7}
+@media (max-width:700px){.rx-btn{display:block}}

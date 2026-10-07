@@ -17,22 +17,11 @@
       link: "" }
   ];
 
-  // answer = nomor pilihan yang benar (dimulai dari 0)
-  var PRETEST = [
-    { q: "Manakah yang paling tepat menggambarkan fungsi anggaran bulanan?",
-      options: ["Mencatat pengeluaran setelah semuanya terjadi saja", "Merencanakan pembagian pemasukan untuk kebutuhan, tabungan, dan kewajiban", "Membatasi seluruh pengeluaran sampai nol", "Menghitung pajak penghasilan"], answer: 1 },
-    { q: "Dana darurat sebaiknya disiapkan untuk:",
-      options: ["Belanja keinginan musiman", "Kebutuhan tak terduga, misalnya sakit atau kehilangan pekerjaan", "Membayar cicilan bulan depan", "Investasi berisiko tinggi"], answer: 1 },
-    { q: "Selain protein, apa yang sebaiknya ada pada satu kali makan seimbang?",
-      options: ["Hanya nasi", "Sayuran, biji-bijian, dan buah", "Gorengan", "Minuman manis"], answer: 1 },
-    { q: "Manakah yang termasuk sumber protein?",
-      options: ["Teh manis", "Telur, tempe, dan ikan", "Sirup", "Keripik"], answer: 1 },
-    { q: "Berapa total jam dalam satu minggu?",
-      options: ["100 jam", "120 jam", "168 jam", "200 jam"], answer: 2 },
-    { q: "Langkah pertama dalam audit waktu adalah:",
-      options: ["Membuat jadwal baru tanpa data", "Mencatat bagaimana waktu benar-benar dipakai selama seminggu", "Menghapus semua aktivitas santai", "Menambah jam kerja"], answer: 1 }
-  ];
-  var POSTTEST = PRETEST; // ganti dengan daftar soal sendiri jika berbeda dari pre-test
+  // Tempel link Google Sheet (diawali https://) di antara tanda kutip
+  var SHEET_LINKS = {
+    pretest: "",
+    posttest: ""
+  };
   // ===================================================================
 
   var h = function (s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); };
@@ -45,38 +34,18 @@
       '<div class="field"><label>Profesi</label>' + input("time-job", "text", "Profesi") + '</div></section>';
   }
 
-  function score(list, prefix) {
-    var a = 0, c = 0;
-    list.forEach(function (q, i) {
-      var v = state[prefix + "-q" + i];
-      if (v !== undefined && v !== "") { a++; if (Number(v) === q.answer) c++; }
-    });
-    return { a: a, c: c, n: list.length, p: list.length ? Math.round(c / list.length * 100) : 0 };
-  }
   function row(label, value) { return '<div class="summary"><span>' + h(label) + '</span><strong>' + h(value) + '</strong></div>'; }
 
-  function testPage(kind, ctx) {
-    var pre = kind === "pretest", list = pre ? PRETEST : POSTTEST, prefix = pre ? "pre" : "post", title = pre ? "Pre-test" : "Post-test";
-    var sc = score(list, prefix);
-    var html = ctx.heading(title, pre ? "Jawab pertanyaan berikut sebelum mengikuti materi." : "Jawab kembali pertanyaan berikut setelah mengikuti materi dan worksheet.") + profile(ctx.input);
-    html += list.map(function (q, i) {
-      var key = prefix + "-q" + i, v = state[key], has = v !== undefined && v !== "";
-      return '<div class="rx-q"><p class="rx-qt"><b>' + (i + 1) + '.</b> ' + h(q.q) + '</p>' +
-        q.options.map(function (o, j) {
-          return '<label class="rx-opt"><input type="radio" name="' + key + '" data-rx="' + key + '" value="' + j + '"' + (has && Number(v) === j ? " checked" : "") + '><span>' + h(o) + '</span></label>';
-        }).join("") + '</div>';
-    }).join("");
-    html += row("Terjawab", sc.a + " dari " + sc.n);
-    html += row("Skor " + title, sc.c + " dari " + sc.n + " (" + sc.p + "%)");
-    if (!pre) {
-      var ps = score(PRETEST, "pre");
-      if (ps.a) {
-        var d = sc.p - ps.p;
-        html += row("Skor Pre-test", ps.c + " dari " + ps.n + " (" + ps.p + "%)");
-        html += row("Peningkatan", (d > 0 ? "+" : "") + d + " poin persentase");
-      }
-    }
-    return html;
+  function sheetPage(kind, ctx) {
+    var pre = kind === "pretest", title = pre ? "Pre-test" : "Post-test", url = SHEET_LINKS[kind] || "";
+    var ok = /^https:\/\//i.test(url);
+    return ctx.heading(title, pre ? "Kerjakan pre-test melalui Google Sheet sebelum mengikuti materi." : "Kerjakan post-test melalui Google Sheet setelah mengikuti materi dan worksheet.") +
+      '<section class="rx-card rx-sheet"><div class="rx-sheet-ico" aria-hidden="true">&#128202;</div>' +
+      '<h2>' + title + ' (Google Sheet)</h2>' +
+      (ok ? '<p>Ketuk tombol di bawah untuk membuka lembar ' + title.toLowerCase() + ' di tab baru.</p>' +
+            '<a class="rx-btn" href="' + h(url) + '" target="_blank" rel="noopener">Buka ' + title + ' &#8599;</a>'
+          : '<p class="rx-muted">Link ' + title + ' belum tersedia.</p>') +
+      '</section>';
   }
 
   function materiPage(ctx) {
@@ -94,7 +63,7 @@
 
   window.RX = {
     has: function (p) { return PAGE_IDS.indexOf(p) > -1; },
-    page: function (p, ctx) { return p === "materi" ? materiPage(ctx) : testPage(p, ctx); }
+    page: function (p, ctx) { return p === "materi" ? materiPage(ctx) : sheetPage(p, ctx); }
   };
 
   document.addEventListener("change", function (e) {

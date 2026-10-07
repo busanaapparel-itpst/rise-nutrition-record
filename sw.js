@@ -1,8 +1,8 @@
-var CACHE = "rise-v10";
+var CACHE = "rise-v12";
 var BS_CSS = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css";
 var LIBS = ["https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js", "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"];
 var SHELL = ["./", "index.html", "bootstrap.html", "main.js", "bootstrap.js", "main.css", "bootstrap.css",
-  "pwa.js", "pwa.css", "manifest.json", "icon-192.png", "icon-512.png"];
+  "extra.js", "pwa.js", "pwa.css", "manifest.json", "icon-192.png", "icon-512.png"];
 
 self.addEventListener("install", function (e) {
   e.waitUntil(caches.open(CACHE).then(function (c) {
