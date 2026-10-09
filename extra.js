@@ -34,6 +34,28 @@
 
   function row(label, value) { return '<div class="summary"><span>' + h(label) + '</span><strong>' + h(value) + '</strong></div>'; }
 
+  // ---- Kunci menu: Materi terbuka setelah Pre-test dicentang; Post-test terbuka setelah 7 materi dicentang ----
+  function preDone() { return state["pretest-done"] === "1"; }
+  function locked(p) {
+    if (p === "materi") return !preDone();
+    if (p === "posttest") return !doneList().every(Boolean);
+    return false;
+  }
+  function lockedPage(p, ctx) {
+    var msg, go, label;
+    if (p === "materi") {
+      msg = "Menu ini terbuka setelah Anda mencentang &ldquo;Saya sudah mengisi Pre-Test&rdquo; pada menu Pre-test.";
+      go = "#pretest"; label = "Ke Pre-test";
+    } else {
+      var n = doneList().filter(Boolean).length;
+      msg = "Menu ini terbuka setelah ketujuh materi dicentang &ldquo;Saya sudah membaca materi ini&rdquo; (" + n + " dari " + MATERI.length + " materi selesai).";
+      go = "#materi"; label = "Ke Materi";
+    }
+    return ctx.heading(p === "materi" ? "Materi" : "Post-test", "Menu ini masih terkunci.") +
+      '<section class="rx-card rx-sheet"><div class="rx-sheet-ico" aria-hidden="true">&#128274;</div><h2>Menu terkunci</h2><p>' + msg + '</p>' +
+      '<a class="rx-btn" href="' + go + '">' + label + '</a></section>';
+  }
+
   function sheetPage(kind, ctx) {
     var pre = kind === "pretest", title = pre ? "Pre-test" : "Post-test", url = SHEET_LINKS[kind] || "";
     var ok = /^https:\/\//i.test(url);
@@ -43,6 +65,9 @@
       (ok ? '<p>Ketuk tombol di bawah untuk membuka formulir ' + title.toLowerCase() + ' di tab baru.</p>' +
             '<a class="rx-btn" href="' + h(url) + '" target="_blank" rel="noopener">Buka ' + title + ' &#8599;</a>'
           : '<p class="rx-muted">Link ' + title + ' belum tersedia.</p>') +
+      (pre ? '<label class="rx-check rx-confirm"><input type="checkbox" data-rx="pretest-done"' + (preDone() ? " checked" : "") + '><span>Saya sudah mengisi Pre-Test</span></label>' +
+             (preDone() ? '<p class="rx-note"><a class="rx-link" href="#materi">Menu Materi sudah terbuka. Lanjut ke Materi &rarr;</a></p>'
+                        : '<p class="rx-note rx-muted">Centang kotak di atas setelah selesai untuk membuka menu Materi.</p>') : "") +
       '</section>';
   }
 
@@ -101,7 +126,11 @@
 
   window.RX = {
     has: function (p) { return PAGE_IDS.indexOf(p) > -1; },
-    page: function (p, ctx) { return p === "materi" ? materiPage(ctx) : sheetPage(p, ctx); }
+    locked: locked,
+    page: function (p, ctx) {
+      if (locked(p)) return lockedPage(p, ctx);
+      return p === "materi" ? materiPage(ctx) : sheetPage(p, ctx);
+    }
   };
 
   // Muat slide hanya saat modul dibuka
@@ -115,6 +144,7 @@
 
   document.addEventListener("change", function (e) {
     var t = e.target;
+    if (t.dataset && t.dataset.rx === "pretest-done") { state["pretest-done"] = t.checked ? "1" : ""; save(); render(); return; }
     if (!t.dataset || !t.dataset.rx || t.dataset.rx.indexOf("materi-done-") !== 0) return;
     var i = Number(t.dataset.rx.replace("materi-done-", "")), j, later = false;
     for (j = i + 1; j < MATERI.length; j++) if (state["materi-done-" + j] === "1") later = true;

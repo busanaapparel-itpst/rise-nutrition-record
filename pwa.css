@@ -125,3 +125,8 @@ details.rx-mod[open]>summary::before{transform:rotate(90deg)}
 .rx-lockrow{display:flex;align-items:center;gap:10px;font-weight:700}
 .rx-locked .rx-note{margin:8px 0 0!important;color:#6a7f87}
 .rx-allDone{margin:14px 0 0;text-align:center;font-weight:700;color:#147052}
+
+/* Menu terkunci & centang Pre-test */
+[data-locked]{opacity:.55}
+.rx-confirm{max-width:380px;margin:18px auto 0;text-align:left}
+.rx-sheet .rx-note{margin:12px 0 0!important}
