@@ -20,7 +20,7 @@
       if (lab && !lab.querySelector(".req")) lab.insertAdjacentHTML("beforeend", ' <span class="req" aria-hidden="true">*</span>');
       if (el) el.setAttribute("aria-required", "true");
     });
-    if (app.querySelector(".top") && !app.querySelector(".rx-sheet") && !app.querySelector(".pdf-actions")) {
+    if (app.querySelector(".top") && !app.querySelector(".rx-sheet, .rx-mod") && !app.querySelector(".pdf-actions")) {
       var d = document.createElement("div");
       d.className = "pdf-actions";
       d.innerHTML = '<button type="button" class="pdf-btn' + (isBs ? " btn btn-primary" : "") + '">Generate PDF</button>' +
@@ -97,7 +97,7 @@
     doc.setDrawColor(190); doc.line(L, y, R, y); y += 8;
     doc.setTextColor(0);
 
-    app.querySelectorAll(".toolbar > div, .field, h2, table, .summary, section .hint, .rx-mod").forEach(function (el) {
+    app.querySelectorAll(".toolbar > div, .field, h2, table, .summary, section .hint").forEach(function (el) {
       if (el.matches(".toolbar > div, .field")) {
         var lab = el.querySelector("label"), inp = el.querySelector("input");
         if (!lab || !inp) return;
@@ -105,13 +105,6 @@
         doc.setFont("helvetica", "bold"); doc.text(clean(lab.textContent) + ":", L, y);
         doc.setFont("helvetica", "normal"); doc.text(fieldText(inp), L + 42, y);
         y += 6.5;
-      } else if (el.classList.contains("rx-mod")) {
-        var mt = doc.splitTextToSize(clean(el.querySelector(".rx-mt").textContent), R - L - 50);
-        room(mt.length * 5 + 4);
-        doc.setFont("helvetica", "bold"); doc.setFontSize(10.5); doc.text(mt, L, y);
-        doc.setFont("helvetica", "normal");
-        doc.text(el.querySelector("input:checked") ? "Sudah dibaca" : "Belum dibaca", R - 2, y, { align: "right" });
-        y += mt.length * 5 + 3;
       } else if (el.tagName === "H2") {
         room(16); y += 3;
         doc.setFont("helvetica", "bold"); doc.setFontSize(12.5); doc.setTextColor(20, 59, 72);
@@ -163,7 +156,6 @@
       test: function (k) { return /^budget:/.test(k) || /^budget-name:/.test(k) || /^b-\d+-\d+$/.test(k) || k === "budgetIds" || k === "budget-period"; } },
     nutrition: { label: "Nutrisi harian (termasuk item yang Anda tambah atau ubah)",
       test: function (k) { return /^n-\d+-/.test(k) || k === "nutIds" || k === "nutrition-date"; } },
-    materi: { label: "Materi", test: function (k) { return /^materi-done-\d+$/.test(k); } },
     time: { label: "Audit waktu",
       test: function (k) { return /^t-\d+-\d+$/.test(k); } }
   };
