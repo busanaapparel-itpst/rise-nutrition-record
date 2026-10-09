@@ -130,3 +130,9 @@ details.rx-mod[open]>summary::before{transform:rotate(90deg)}
 [data-locked]{opacity:.55}
 .rx-confirm{max-width:380px;margin:18px auto 0;text-align:left}
 .rx-sheet .rx-note{margin:12px 0 0!important}
+
+/* Materi: hambat unduh/salin/cetak */
+.rx-mod{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.rx-slides iframe{z-index:1}
+.rx-shield{position:absolute;top:0;right:0;width:96px;height:58px;z-index:2}
+@media print{.rx-body,.rx-slides{display:none!important}}

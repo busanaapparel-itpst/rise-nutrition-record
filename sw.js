@@ -1,4 +1,4 @@
-var CACHE = "rise-v18";
+var CACHE = "rise-v19";
 var BS_CSS = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css";
 var LIBS = ["https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js", "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"];
 var SHELL = ["./", "index.html", "bootstrap.html", "main.js", "bootstrap.js", "main.css", "bootstrap.css",
