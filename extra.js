@@ -2,19 +2,17 @@
    Ubah isi materi dan soal di bagian KONTEN di bawah ini. */
 (function () {
   // ================= KONTEN (contoh, silakan ganti) =================
+  // Ada 7 slot materi (satu per file PPT). Ubah title, lalu isi salah satu dari slides atau pptx:
+  //  slides: link Google Slides/Drive (link berbagi biasa boleh ditempel langsung) atau link sematan, diawali https://
+  //  pptx:   nama file .pptx yang diunggah ke repository GitHub, misalnya "materi/modul1.pptx"
   var MATERI = [
-    { title: "Modul 1 · Budgeting bulanan",
-      body: ["Anggaran bulanan adalah rencana pembagian pemasukan sebelum bulan berjalan: untuk kebutuhan rutin, cicilan, tabungan, dana darurat, dan pengeluaran lain.",
-             "Catat pemasukan lebih dulu, lalu alokasikan ke setiap kelompok. Bandingkan hasilnya di akhir bulan untuk melihat selisihnya."],
-      link: "" },
-    { title: "Modul 2 · Nutrisi harian",
-      body: ["Makan seimbang mencakup protein, serat/sayuran, biji-bijian, dan buah/vitamin pada setiap waktu makan.",
-             "Catat menu dan biaya makan harian agar pola makan dan pengeluaran makanan mudah dipantau."],
-      link: "" },
-    { title: "Modul 3 · Audit waktu",
-      body: ["Dalam seminggu ada 168 jam. Audit waktu membantu melihat ke mana jam-jam itu benar-benar dipakai.",
-             "Catat jam per aktivitas selama satu minggu, lalu tinjau aktivitas mana yang perlu dikurangi atau ditambah."],
-      link: "" }
+    { title: "Materi 1", body: [], slides: "https://docs.google.com/presentation/d/1HKq5pc6l3fJBsFic2Nu8h3b68WQpbG5W/edit", pptx: "", link: "" },
+    { title: "Materi 2", body: [], slides: "https://docs.google.com/presentation/d/1tWDfifjtL63osZqI2uFsxljQh-0UIzBq/edit", pptx: "", link: "" },
+    { title: "Materi 3", body: [], slides: "https://docs.google.com/presentation/d/1s0Q1JId7lUnXHQoNdfJB6XaOfX1aMYeI/edit", pptx: "", link: "" },
+    { title: "Materi 4", body: [], slides: "https://docs.google.com/presentation/d/1EQ9Heqq5w8uEwp8PGK8ZcdxHyBdk3c0d/edit", pptx: "", link: "" },
+    { title: "Materi 5", body: [], slides: "https://docs.google.com/presentation/d/1yf6kcYcMQy7vbVse4QEcyxQ-r3HT_rct/edit", pptx: "", link: "" },
+    { title: "Materi 6", body: [], slides: "https://docs.google.com/presentation/d/118C9UgneYWz2rsA2vjo6N_JDqKm0qedZ/edit", pptx: "", link: "" },
+    { title: "Materi 7", body: [], slides: "https://docs.google.com/presentation/d/1WDLXoe-6RT8z-GqWa78Ft_3Wo_WoYAR5/edit", pptx: "", link: "" }
   ];
 
   // Tempel link Google Sheet (diawali https://) di antara tanda kutip
@@ -48,17 +46,44 @@
       '</section>';
   }
 
+  function slideHtml(m, i) {
+    var src = "", open = "", label = "";
+    if (m.slides && /^https:\/\//i.test(m.slides)) {
+      src = m.slides; open = m.slides; label = "Buka slide di tab baru";
+      // Link berbagi biasa (…/d/ID/edit) diubah otomatis menjadi link sematan
+      var g = m.slides.match(/^https:\/\/(?:docs|drive)\.google\.com\/(?:presentation\/d|file\/d)\/([\w-]+)/);
+      if (g && !/\/(embed|pub)(\?|\/|$)/.test(m.slides)) {
+        src = g[1].length > 40
+          ? "https://docs.google.com/presentation/d/" + g[1] + "/embed?start=false&loop=false"
+          : "https://drive.google.com/file/d/" + g[1] + "/preview";
+      }
+    }
+    else if (m.pptx) {
+      try {
+        var file = new URL(m.pptx, location.href).href;
+        src = "https://view.officeapps.live.com/op/embed.aspx?src=" + encodeURIComponent(file);
+        open = file; label = "Unduh file PPT";
+      } catch (err) {}
+    }
+    if (!src) return "";
+    // src diisi saat modul dibuka, agar 7 slide tidak dimuat sekaligus
+    return '<div class="rx-slides"><iframe data-src="' + h(src) + '" title="' + h(m.title) + '" allowfullscreen></iframe></div>' +
+      '<p class="rx-note"><a class="rx-link" href="' + h(open) + '" target="_blank" rel="noopener">' + label + ' &#8599;</a></p>';
+  }
+
   function materiPage(ctx) {
     var done = 0;
     var cards = MATERI.map(function (m, i) {
       var d = state["materi-done-" + i] === "1"; if (d) done++;
-      return '<section class="rx-card rx-mod"><h3 class="rx-mt">' + h(m.title) + '</h3>' +
-        m.body.map(function (p) { return "<p>" + h(p) + "</p>"; }).join("") +
+      return '<details class="rx-card rx-mod"><summary><span class="rx-mt">' + h(m.title) + '</span>' +
+        '<span class="rx-badge' + (d ? " done" : "") + '">' + (d ? "Sudah dibaca" : "Belum dibaca") + '</span></summary><div class="rx-body">' +
+        (m.body || []).map(function (p) { return "<p>" + h(p) + "</p>"; }).join("") +
+        slideHtml(m, i) +
         (m.link ? '<p><a class="rx-link" href="' + h(m.link) + '" target="_blank" rel="noopener">Buka materi &#8599;</a></p>' : "") +
-        '<label class="rx-check"><input type="checkbox" data-rx="materi-done-' + i + '"' + (d ? " checked" : "") + '><span>Saya sudah membaca materi ini</span></label></section>';
+        '<label class="rx-check"><input type="checkbox" data-rx="materi-done-' + i + '"' + (d ? " checked" : "") + '><span>Saya sudah membaca materi ini</span></label></div></details>';
     }).join("");
-    return ctx.heading("Materi", "Baca setiap modul, lalu centang jika sudah selesai.") + profile(ctx.input) + cards +
-      row("Materi selesai dibaca", done + " dari " + MATERI.length);
+    return ctx.heading("Materi", "Ketuk judul modul untuk membuka slide, lalu centang jika sudah selesai dibaca.") + profile(ctx.input) + cards +
+      '<div class="summary"><span>Materi selesai dibaca</span><strong class="rx-prog">' + done + " dari " + MATERI.length + "</strong></div>";
   }
 
   window.RX = {
@@ -66,11 +91,42 @@
     page: function (p, ctx) { return p === "materi" ? materiPage(ctx) : sheetPage(p, ctx); }
   };
 
+  // Muat slide hanya saat modul dibuka
+  document.addEventListener("toggle", function (e) {
+    var d = e.target;
+    if (d.open && d.classList && d.classList.contains("rx-mod")) {
+      var f = d.querySelector("iframe[data-src]");
+      if (f && !f.getAttribute("src")) f.setAttribute("src", f.getAttribute("data-src"));
+    }
+  }, true);
+
+  // Centang selesai dibaca: perbarui di tempat tanpa menggambar ulang halaman (agar slide tidak termuat ulang)
   document.addEventListener("change", function (e) {
     var t = e.target;
     if (!t.dataset || !t.dataset.rx) return;
-    state[t.dataset.rx] = t.type === "checkbox" ? (t.checked ? "1" : "") : t.value;
+    state[t.dataset.rx] = t.checked ? "1" : "";
     save();
-    render();
+    var card = t.closest(".rx-mod");
+    if (!card) return;
+    var b = card.querySelector(".rx-badge");
+    b.textContent = t.checked ? "Sudah dibaca" : "Belum dibaca";
+    b.classList.toggle("done", t.checked);
+    var n = 0;
+    MATERI.forEach(function (_, i) { if (state["materi-done-" + i] === "1") n++; });
+    var p = document.querySelector(".rx-prog");
+    if (p) p.textContent = n + " dari " + MATERI.length;
   });
+
+  // Di halaman Materi, mengetik nama/usia/profesi tidak menggambar ulang halaman (slide yang terbuka tidak berkedip)
+  document.addEventListener("input", function (e) {
+    var t = e.target;
+    if (!t.dataset || !t.dataset.key || !document.querySelector(".rx-mod")) return;
+    if (t.inputMode === "decimal") {
+      var c = t.value.replace(/,/g, ".").replace(/[^0-9.]/g, "");
+      if (c !== t.value) t.value = c;
+    }
+    state[t.dataset.key] = t.value;
+    save();
+    e.stopPropagation();
+  }, true);
 })();

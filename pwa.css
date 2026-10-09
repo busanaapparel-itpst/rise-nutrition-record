@@ -101,3 +101,21 @@ table.wide th:first-child{background:#f3f8f8}
 .shell:has(.nav-pills) .rx-btn{background:#0d6efd}
 .shell:has(.nav-pills) .rx-btn:hover{background:#0b5ed7}
 @media (max-width:700px){.rx-btn{display:block}}
+
+/* Slide materi (iframe responsif 16:9) */
+.rx-slides{position:relative;width:100%;aspect-ratio:16/9;border:1px solid #dfe8ea;border-radius:10px;overflow:hidden;background:#f3f7f8;margin:6px 0 8px}
+.rx-slides iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.rx-note{margin:0 0 12px!important;font-size:14px}
+
+/* Materi sebagai akordeon */
+details.rx-mod{padding:0;overflow:hidden}
+details.rx-mod>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:16px 18px;font-weight:700;font-size:1.02rem;-webkit-tap-highlight-color:transparent}
+details.rx-mod>summary::-webkit-details-marker{display:none}
+details.rx-mod>summary::before{content:"\25B6";font-size:11px;color:#147c70;transition:transform .15s;flex:none}
+details.rx-mod[open]>summary::before{transform:rotate(90deg)}
+.shell:has(.nav-pills) details.rx-mod>summary::before{color:#0d6efd}
+.rx-mt{flex:1;min-width:0}
+.rx-badge{flex:none;font-size:12px;font-weight:700;padding:4px 10px;border-radius:99px;background:#eef2f3;color:#657a83;white-space:nowrap}
+.rx-badge.done{background:#e1f3ec;color:#147052}
+.rx-body{padding:14px 18px 18px;border-top:1px solid #edf2f3}
+@media (max-width:700px){details.rx-mod>summary{padding:14px}.rx-body{padding:12px 14px 14px}}
