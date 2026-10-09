@@ -15,10 +15,10 @@
     { title: "Materi 7 : HKSR", body: [], slides: "https://docs.google.com/presentation/d/1WDLXoe-6RT8z-GqWa78Ft_3Wo_WoYAR5/edit", pptx: "", link: "" }
   ];
 
-  // Tempel link Google Sheet (diawali https://) di antara tanda kutip
+  // Tempel link Google Form/Sheet (diawali https://) di antara tanda kutip
   var SHEET_LINKS = {
-    pretest: "",
-    posttest: ""
+    pretest: "https://forms.gle/3GXjttf7xkUVSbd6A",
+    posttest: "https://forms.gle/3GXjttf7xkUVSbd6A"
   };
   // ===================================================================
 
@@ -37,10 +37,10 @@
   function sheetPage(kind, ctx) {
     var pre = kind === "pretest", title = pre ? "Pre-test" : "Post-test", url = SHEET_LINKS[kind] || "";
     var ok = /^https:\/\//i.test(url);
-    return ctx.heading(title, pre ? "Kerjakan pre-test melalui Google Sheet sebelum mengikuti materi." : "Kerjakan post-test melalui Google Sheet setelah mengikuti materi dan worksheet.") +
+    return ctx.heading(title, pre ? "Kerjakan pre-test melalui Google Form sebelum mengikuti materi." : "Kerjakan post-test melalui Google Form setelah mengikuti materi dan worksheet.") +
       '<section class="rx-card rx-sheet"><div class="rx-sheet-ico" aria-hidden="true">&#128202;</div>' +
-      '<h2>' + title + ' (Google Sheet)</h2>' +
-      (ok ? '<p>Ketuk tombol di bawah untuk membuka lembar ' + title.toLowerCase() + ' di tab baru.</p>' +
+      '<h2>' + title + ' (Google Form)</h2>' +
+      (ok ? '<p>Ketuk tombol di bawah untuk membuka formulir ' + title.toLowerCase() + ' di tab baru.</p>' +
             '<a class="rx-btn" href="' + h(url) + '" target="_blank" rel="noopener">Buka ' + title + ' &#8599;</a>'
           : '<p class="rx-muted">Link ' + title + ' belum tersedia.</p>') +
       '</section>';
